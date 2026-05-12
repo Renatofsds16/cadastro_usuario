@@ -4,7 +4,9 @@ import "./Footer.css";
 export default props => {
     return (
         <footer className="footer">
-             rodapé
+            <span>
+                Desenvolvido por <strong>Renato Firmino Santos da Silva</strong>
+            </span>
         </footer>
     )
 }

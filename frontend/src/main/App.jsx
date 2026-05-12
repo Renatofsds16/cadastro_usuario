@@ -6,14 +6,17 @@ import Logo from "../components/templates/Logo";
 import Nav from "../components/templates/Nav";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "font-awesome/css/font-awesome.min.css";
+import { BrowserRouter } from "react-router-dom";
+import Routes from "./Routes";
 
-export default props => {
-    return (
+export default props => 
+    <BrowserRouter>
         <div className="app">
             <Logo />
             <Nav />
-            <Main icon="home" subtitle="Página Inicial" />
+            <Routes/>
             <Footer />
         </div>
-    )
-}
+    </BrowserRouter>
+    
+
