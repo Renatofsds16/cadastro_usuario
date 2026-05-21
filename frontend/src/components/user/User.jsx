@@ -19,6 +19,11 @@ const initialState = {
 
 export default class UserCrud extends Component {
     state = {...initialState}
+    componentWillMount(){
+        axios(baseURL).then(response => {
+            this.setState({list:response.data})
+        })
+    }
     clear(){
         this.setState({user:initialState.user})
     }
@@ -31,15 +36,51 @@ export default class UserCrud extends Component {
             this.setState({user:initialState.user, list})
        })
     }
-    getUpdateList(user){
+    getUpdateList(user,add=true){
         const list = this.state.list.filter(u => u.id !== user.id)
-        list.unshift(user)
+        if(add) list.unshift(user)
         return list
     }
     updateFild(event){
         const user = this.state.user
         user[event.target.name] = event.target.value
         this.setState({user})
+    }
+    renderTable(){
+        return (
+            <table className="table mt-4">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Acões</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {this.renderRows()}
+                </tbody>
+            </table>
+        )
+    }
+    renderRows(){
+        return this.state.list.map(user => {
+            return (
+                <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>
+                        <button className="btn btn-warning" onClick={()=>this.load(user)}>
+                            <i className="fa fa-pencil"></i>
+                        </button>
+                        <button className="btn btn-danger ml-2 "onClick={()=> this.remover(user)}>
+                            <i className="fa fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            )
+        })
     }
 
     renderForm(){
@@ -91,11 +132,23 @@ export default class UserCrud extends Component {
             </div>
         )
     }
+    load(user){
+        this.setState({user})
+    }
+    remover(user){
+        axios.delete(`${baseURL}/${user.id}`).then(response =>{
+            const list = this.getUpdateList(user,false)
+            this.setState({list})
+        })
+    }
+
 
     render(){
+        
         return(
             <Main {...headerProps} >
                 {this.renderForm()}
+                {this.renderTable()}
             </Main>
         )
     }
